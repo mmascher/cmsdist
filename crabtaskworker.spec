@@ -1,26 +1,26 @@
-### RPM cms crabtaskworker 0.0.1pre16
+### RPM cms crabtaskworker 3.3.0.pre5.2
 ## INITENV +PATH PATH %i/xbin
 ## INITENV +PATH PYTHONPATH %i/$PYTHON_LIB_SITE_PACKAGES
 ## INITENV +PATH PYTHONPATH %i/x$PYTHON_LIB_SITE_PACKAGES
 
 
 %define webdoc_files %{installroot}/%{pkgrel}/doc/
-%define wmcver 0.9.78
-%define crabutils 0.0.1pre16
+%define wmcver 0.9.82
+%define crabutils 0.0.1pre18
+%define twtag 3.3.0-pre5
 
 Source0: git://github.com/dmwm/WMCore.git?obj=master/%{wmcver}&export=WMCore-%{wmcver}&output=/WMCore-%{n}-%{wmcver}.tar.gz
-Source1: git+http://git.cern.ch/pub/CAFTaskWorker.git?obj=master/%{realversion}&export=CAFTaskWorker-%{realversion}&output=/CAFTaskWorker-%{realversion}.tar.gz
+Source1: git://github.com/bbockelm/CAFTaskWorker.git?obj=master/%{twtag}&export=CAFTaskWorker-%{realversion}&output=/CAFTaskWorker-%{realversion}.tar.gz
+#Source1: git+http://git.cern.ch/pub/CAFTaskWorker.git?obj=master/%{realversion}&export=CAFTaskWorker-%{realversion}&output=/CAFTaskWorker-%{realversion}.tar.gz
 Source2: git+http://git.cern.ch/pub/CAFUtilities.git?obj=master/%{crabutils}&export=CAFUtilities-%{crabutils}&output=/CAFUtilities-%{crabutils}.tar.gz
 
 Requires: python  dbs-client dls-client dbs3-client py2-pycurl py2-httplib2 py2-sqlalchemy py2-cx-oracle
 BuildRequires: py2-sphinx
-Patch0: crabtaskworker-setup
 
 %prep
 %setup -D -T -b 1 -n CAFTaskWorker-%{realversion}
 %setup -T -b 2 -n CAFUtilities-%{crabutils}
 %setup -T -b 0 -n WMCore-%{wmcver}
-%patch0 -p0
 
 %build
 pwd
