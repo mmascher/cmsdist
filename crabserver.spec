@@ -6,19 +6,16 @@
 
 %define webdoc_files %{installroot}/%{pkgrel}/doc/
 %define wmcver 0.9.78
-%define crabutils 0.0.1pre16
 
 Source0: git://github.com/dmwm/WMCore.git?obj=master/%{wmcver}&export=WMCore-%{wmcver}&output=/WMCore-%{n}-%{wmcver}.tar.gz
-Source1: git://github.com/bbockelm/CRABServer.git?obj=master/%{realversion}&export=CRABServer-%{realversion}&output=/CRABServer-%{realversion}.tar.gz
-Source2: git+http://git.cern.ch/pub/CAFUtilities.git?obj=master/%{crabutils}&export=CAFUtilities-%{crabutils}&output=/CAFUtilities-%{crabutils}.tar.gz
+Source1: git://github.com/dmwm/CRABServer.git?obj=master/%{realversion}&export=CRABServer-%{realversion}&output=/CRABServer-%{realversion}.tar.gz
 
-Requires: python cherrypy py2-cjson rotatelogs py2-pycurl py2-httplib2 py2-sqlalchemy py2-cx-oracle py2-pyopenssl 
+Requires: python cherrypy py2-cjson rotatelogs py2-pycurl py2-httplib2 py2-sqlalchemy py2-cx-oracle py2-pyopenssl
 BuildRequires: py2-sphinx
 Patch0: crabserver3-setup
 
 %prep
 %setup -D -T -b 1 -n CRABServer-%{realversion}
-%setup -T -b 2 -n CAFUtilities-%{crabutils}
 %setup -T -b 0 -n WMCore-%{wmcver}
 %patch0 -p0
 
@@ -28,10 +25,6 @@ cd ../WMCore-%{wmcver}
 python setup.py build_system -s crabserver
 PYTHONPATH=$PWD/build/lib:$PYTHONPATH
 
-cd ../CAFUtilities-%{crabutils}
-perl -p -i -e "s{<VERSION>}{%{realversion}}g" doc/crabutilities/conf.py
-python setup.py build_system -s crabserver
-
 cd ../CRABServer-%{realversion}
 perl -p -i -e "s{<VERSION>}{%{realversion}}g" doc/crabserver/conf.py
 python setup.py build_system -s CRABInterface
@@ -40,8 +33,6 @@ python setup.py build_system -s CRABInterface
 mkdir -p %i/etc/profile.d %i/{x,}{bin,lib,data,doc} %i/{x,}$PYTHON_LIB_SITE_PACKAGES
 cd ../WMCore-%{wmcver}
 python setup.py install_system -s crabserver --prefix=%i
-cd ../CAFUtilities-%{crabutils}
-python setup.py install_system -s crabserver  --prefix=%i
 cd ../CRABServer-%{realversion}
 python setup.py install_system -s CRABInterface --prefix=%i
 
